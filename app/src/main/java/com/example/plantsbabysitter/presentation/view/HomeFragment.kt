@@ -1,4 +1,4 @@
-package com.example.plantsbabysitter.activities
+package com.example.plantsbabysitter.presentation.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,13 +6,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.plantsbabysitter.R
+import com.example.plantsbabysitter.domain.repository.RepositoryImpl
+import com.example.plantsbabysitter.domain.usecases.UseCaseImpl
+import com.example.plantsbabysitter.presentation.viewmodel.HomeViewModel
+import com.example.plantsbabysitter.presentation.viewmodel.MainViewModelFactory
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
 class HomeFragment : Fragment() {
+    
+    private val viewModel by lazy {
+        ViewModelProvider(this,
+            MainViewModelFactory(UseCaseImpl(RepositoryImpl()))
+        ).get(HomeViewModel::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

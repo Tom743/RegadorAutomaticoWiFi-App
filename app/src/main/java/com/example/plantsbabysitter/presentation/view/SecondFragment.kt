@@ -1,4 +1,4 @@
-package com.example.plantsbabysitter.activities
+package com.example.plantsbabysitter.presentation.view
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment

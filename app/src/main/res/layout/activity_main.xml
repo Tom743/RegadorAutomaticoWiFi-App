@@ -4,25 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.MainActivity">
+    tools:context=".presentation.view.MainActivity">
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/welcomefragment"
-        android:name="com.example.plantsbabysitter.activities.HomeFragment"
+        android:name="com.example.plantsbabysitter.presentation.view.HomeFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_home" />
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/mainFragment"
-        android:name="com.example.plantsbabysitter.activities.SecondFragment"
+        android:name="com.example.plantsbabysitter.presentation.view.SecondFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="-16dp"
         tools:layout="@layout/fragment_home" />
 
-    <fragment
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"

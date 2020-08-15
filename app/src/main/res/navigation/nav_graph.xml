@@ -6,14 +6,14 @@
     app:startDestination="@id/HomeFragment">
 
     <fragment
-        android:name="com.example.plantsbabysitter.activities.NavHostFragment"
+        android:name="com.example.plantsbabysitter.presentation.view.NavHostFragment"
         android:id="@+id/nav_host_fragment"
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_graph"/>
 
     <fragment
         android:id="@+id/HomeFragment"
-        android:name="com.example.plantsbabysitter.activities.HomeFragment"
+        android:name="com.example.plantsbabysitter.presentation.view.HomeFragment"
         android:label="@string/home_fragment_label"
         tools:layout="@layout/fragment_home">
 
@@ -23,7 +23,7 @@
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
-        android:name="com.example.plantsbabysitter.activities.SecondFragment"
+        android:name="com.example.plantsbabysitter.presentation.view.SecondFragment"
         android:label="@string/second_fragment_label"
         tools:layout="@layout/fragment_second">
 

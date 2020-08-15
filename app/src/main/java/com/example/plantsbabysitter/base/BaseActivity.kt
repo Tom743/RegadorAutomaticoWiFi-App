@@ -1,8 +1,7 @@
-package com.example.plantsbabysitter.baseactivity
+package com.example.plantsbabysitter.base
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.plantsbabysitter.R
 
@@ -13,10 +12,6 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base)
-    }
-
-    fun shortToast(message: String) {
-        Toast.makeText(applicationContext, message, Toast.LENGTH_SHORT).show()
     }
 
     fun goToFragment(fragment: Fragment?) {
