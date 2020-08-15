@@ -10,7 +10,7 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val fragment1 = R.id.HomeFragment
-        goToFragment(fragmentManager.findFragmentById(fragment1))
+        val homeFragment = R.id.HomeFragment
+        goToFragment(fragmentManager.findFragmentById(homeFragment))
     }
 }

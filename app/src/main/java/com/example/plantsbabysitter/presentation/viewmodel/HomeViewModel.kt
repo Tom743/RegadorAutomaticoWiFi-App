@@ -1,20 +1,19 @@
 package com.example.plantsbabysitter.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
-import com.example.plantsbabysitter.domain.usecases.IUseCase
-import com.example.plantsbabysitter.util.DataResources
-import kotlinx.coroutines.Dispatchers
+import com.example.plantsbabysitter.domain.repo.FirebaseQueryLiveData
+import com.google.firebase.database.FirebaseDatabase
 
-class HomeViewModel(private val useCase: IUseCase): ViewModel() {
 
-    val fetchData = liveData(Dispatchers.IO) {
-        emit(DataResources.Loading())
-        try {
-            val data = useCase.getData()
-            emit(data)
-        } catch (e: Exception) {
-            emit(DataResources.Failure(e))
-        }
+class HomeViewModel: ViewModel() {
+
+    private fun getLiveData(path: String): FirebaseQueryLiveData {
+        val ref = FirebaseDatabase.getInstance().getReference(path).ref
+        return FirebaseQueryLiveData(ref)
     }
+
+    fun getPruebaLiveData(): FirebaseQueryLiveData {
+        return getLiveData("prueba")
+    }
+
 }
