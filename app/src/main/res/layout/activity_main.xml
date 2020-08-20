@@ -15,7 +15,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/login_fragment"
-        android:name="com.example.plantsbabysitter.ui.login.LoginFragment"
+        android:name="com.example.plantsbabysitter.ui.login.GoogleSignInFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_login" />

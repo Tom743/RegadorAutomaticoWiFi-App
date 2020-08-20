@@ -1,26 +1,39 @@
 package com.example.plantsbabysitter.ui.login
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import androidx.annotation.StringRes
-import androidx.fragment.app.Fragment
+import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ProgressBar
-import android.widget.Toast
+import android.widget.*
+import androidx.fragment.app.Fragment
 import com.example.plantsbabysitter.R
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.squareup.picasso.Picasso
+import de.hdodenhof.circleimageview.CircleImageView
 
 
 class GoogleSignInFragment : Fragment() {
 
-    private lateinit var loginViewModel: LoginViewModel
+    private lateinit var mAuth: FirebaseAuth
+    private lateinit var mGoogleSignInClient: GoogleSignInClient
+
+    private lateinit var progressBar: ProgressBar
+    private lateinit var buttonLogin: Button
+    private lateinit var buttonLogout: Button
+    private lateinit var textView: TextView
+    private lateinit var firebaseImageView: ImageView
+    private lateinit var profilePicImageView: CircleImageView
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,86 +45,111 @@ class GoogleSignInFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        loginViewModel = ViewModelProviders.of(this, LoginViewModelFactory())
-            .get(LoginViewModel::class.java)
 
-        val usernameEditText = view.findViewById<EditText>(R.id.username)
-        val passwordEditText = view.findViewById<EditText>(R.id.password)
-        val loginButton = view.findViewById<Button>(R.id.login_fragment)
-        val loadingProgressBar = view.findViewById<ProgressBar>(R.id.loading)
+        mAuth = FirebaseAuth.getInstance()
+        buttonLogin = view.findViewById(R.id.login_button)
+        buttonLogout = view.findViewById(R.id.logout_button)
+        textView = view.findViewById(R.id.firebase_text)
+        progressBar = view.findViewById(R.id.progress_login)
+        firebaseImageView = view.findViewById(R.id.firebase_image)
+        profilePicImageView = view.findViewById(R.id.profile_image)
 
-        loginViewModel.loginFormState.observe(viewLifecycleOwner,
-            Observer { loginFormState ->
-                if (loginFormState == null) {
-                    return@Observer
-                }
-                loginButton.isEnabled = loginFormState.isDataValid
-                loginFormState.usernameError?.let {
-                    usernameEditText.error = getString(it)
-                }
-                loginFormState.passwordError?.let {
-                    passwordEditText.error = getString(it)
-                }
-            })
+        buttonLogin.setOnClickListener { signInGoogle() }
+        buttonLogout.setOnClickListener { logOut() }
 
-        loginViewModel.loginResult.observe(viewLifecycleOwner,
-            Observer { loginResult ->
-                loginResult ?: return@Observer
-                loadingProgressBar.visibility = View.GONE
-                loginResult.error?.let {
-                    showLoginFailed(it)
-                }
-                loginResult.success?.let {
-                    updateUiWithUser(it)
-                }
-            })
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build()
+        mGoogleSignInClient = context?.let { GoogleSignIn.getClient(it, gso) }!!
 
-        val afterTextChangedListener = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
-                // ignore
-            }
-
-            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                // ignore
-            }
-
-            override fun afterTextChanged(s: Editable) {
-                loginViewModel.loginDataChanged(
-                    usernameEditText.text.toString(),
-                    passwordEditText.text.toString()
-                )
-            }
-        }
-        usernameEditText.addTextChangedListener(afterTextChangedListener)
-        passwordEditText.addTextChangedListener(afterTextChangedListener)
-        passwordEditText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                loginViewModel.login(
-                    usernameEditText.text.toString(),
-                    passwordEditText.text.toString()
-                )
-            }
-            false
-        }
-
-        loginButton.setOnClickListener {
-            loadingProgressBar.visibility = View.VISIBLE
-            loginViewModel.login(
-                usernameEditText.text.toString(),
-                passwordEditText.text.toString()
-            )
+        if (mAuth.currentUser != null) {
+            val user = mAuth.currentUser
+            updateUIWithUser(user)
         }
     }
 
-    private fun updateUiWithUser(model: LoggedInUserView) {
-        val welcome = getString(R.string.welcome) + model.displayName
-        // TODO : initiate successful logged in experience
-        val appContext = context?.applicationContext ?: return
-        Toast.makeText(appContext, welcome, Toast.LENGTH_LONG).show()
+    private fun signInGoogle() {
+        progressBar.visibility = View.VISIBLE
+        val signInIntent = mGoogleSignInClient.signInIntent
+        startActivityForResult(signInIntent, GOOGLE_SIGN_IN)
     }
 
-    private fun showLoginFailed(@StringRes errorString: Int) {
-        val appContext = context?.applicationContext ?: return
-        Toast.makeText(appContext, errorString, Toast.LENGTH_LONG).show()
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == GOOGLE_SIGN_IN) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                account?.let { firebaseAuthWithGoogle(it) }
+            } catch (e: ApiException) {
+                Log.e(LOG_TAG, "Google sign in failed", e)
+                FirebaseCrashlytics.getInstance().recordException(e)
+            }
+        }
+    }
+
+    private fun firebaseAuthWithGoogle(account: GoogleSignInAccount) {
+        Log.d(LOG_TAG, "firebaseAuthWithGoogle:" + account.id)
+
+        val credential = GoogleAuthProvider.getCredential(account.idToken, null)
+        mAuth.signInWithCredential(credential).addOnCompleteListener { task ->
+            progressBar.visibility = View.INVISIBLE
+            if (task.isSuccessful) {
+                Log.d(LOG_TAG, "signInWithCredential:success")
+
+                val user = mAuth.currentUser
+                updateUIWithUser(user)
+            } else {
+                Log.e(LOG_TAG, "signInWithCredential:failure", task.exception)
+                task.exception?.let { FirebaseCrashlytics.getInstance().recordException(it) }
+
+                Toast.makeText(
+                    context, "Authentication failed.",
+                    Toast.LENGTH_SHORT
+                ).show()
+                updateUINoUser()
+            }
+        }
+    }
+
+    private fun updateUIWithUser(user: FirebaseUser?) {
+        val name = user!!.displayName
+        val email = user.email
+        val photo = user.photoUrl
+
+        textView.text = getString(R.string.user_info_title)
+        textView.append("\n$name")
+        textView.append("\n$email")
+
+        /*
+        firebaseImageView.visibility = View.INVISIBLE
+        profilePicImageView.visibility = View.VISIBLE
+        Picasso.get().load(photo).into(profilePicImageView)*/
+        Picasso.get().load(photo).into(firebaseImageView)
+
+        buttonLogout.visibility = View.VISIBLE
+        buttonLogin.visibility = View.INVISIBLE
+
+    }
+
+    private fun updateUINoUser() {
+        textView.text = resources.getString(R.string.firebase_login)
+        /*firebaseImageView.visibility = View.VISIBLE
+        profilePicImageView.visibility = View.INVISIBLE*/
+        Picasso.get().load(R.drawable.ic_firebase_logo).into(firebaseImageView)
+        buttonLogout.visibility = View.INVISIBLE
+        buttonLogin.visibility = View.VISIBLE
+    }
+
+    private fun logOut() {
+        FirebaseAuth.getInstance().signOut()
+        mGoogleSignInClient.signOut().addOnCompleteListener { updateUINoUser() }
+    }
+
+    companion object {
+        private const val GOOGLE_SIGN_IN = 123
+        private const val LOG_TAG = "GoogleSignInFragment"
     }
 }

@@ -1,11 +1,9 @@
 package com.example.plantsbabysitter.base
 
-import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.plantsbabysitter.R
 
@@ -48,11 +46,6 @@ open class BaseActivity : AppCompatActivity() {
 
     fun hideProgressBar() {
         progressBar?.visibility = View.INVISIBLE
-    }
-
-    fun hideKeyboard(view: View) {
-        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
     public override fun onStop() {

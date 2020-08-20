@@ -13,6 +13,7 @@ class HomeViewModel: ViewModel() {
         return FirebaseQueryLiveData(ref)
     }
 
+    // TODO 20/AUG/2020 Move strings to resource file
     fun getPruebaLiveData(): FirebaseQueryLiveData {
         return getLiveData("prueba")
     }
