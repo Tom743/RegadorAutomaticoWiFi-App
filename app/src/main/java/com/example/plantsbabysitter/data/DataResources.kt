@@ -1,4 +1,4 @@
-package com.example.plantsbabysitter.util
+package com.example.plantsbabysitter.data
 
 sealed class DataResources<out T> {
     // class Loading<out T>: DataResources<T>() TODO 25/AUG/2020 Use this when you first call the query live data to get the graphs or whatever

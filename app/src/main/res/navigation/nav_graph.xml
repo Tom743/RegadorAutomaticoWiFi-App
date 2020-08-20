@@ -2,33 +2,31 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph"
     app:startDestination="@id/HomeFragment">
 
     <fragment
-        android:name="com.example.plantsbabysitter.presentation.view.NavHostFragment"
+        android:name="com.example.plantsbabysitter.ui.NavHostFragment"
         android:id="@+id/nav_host_fragment"
         app:defaultNavHost="true"
         app:navGraph="@navigation/nav_graph"/>
 
     <fragment
         android:id="@+id/HomeFragment"
-        android:name="com.example.plantsbabysitter.presentation.view.HomeFragment"
+        android:name="com.example.plantsbabysitter.ui.home.HomeFragment"
         android:label="@string/home_fragment_label"
         tools:layout="@layout/fragment_home">
-
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_HomeFragment_to_login"
+            app:destination="@id/login_fragment" />
     </fragment>
-    <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.example.plantsbabysitter.presentation.view.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
 
+    <fragment
+        android:id="@+id/login_fragment"
+        android:name="com.example.plantsbabysitter.ui.login.GoogleSignInFragment"
+        android:label="@string/login_fragment_label"
+        tools:layout="@layout/fragment_login">
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
+            android:id="@+id/action_login_to_HomeFragment"
             app:destination="@id/HomeFragment" />
     </fragment>
 </navigation>

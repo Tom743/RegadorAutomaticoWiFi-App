@@ -1,4 +1,4 @@
-package com.example.plantsbabysitter.presentation.view
+package com.example.plantsbabysitter.ui
 
 import androidx.navigation.NavController
 import androidx.navigation.NavHost

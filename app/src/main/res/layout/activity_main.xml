@@ -4,26 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.view.MainActivity">
+    tools:context=".ui.MainActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/home_fragment"
-        android:name="com.example.plantsbabysitter.presentation.view.HomeFragment"
+        android:name="com.example.plantsbabysitter.ui.home.HomeFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:layout="@layout/fragment_home" />
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/mainFragment"
-        android:name="com.example.plantsbabysitter.presentation.view.SecondFragment"
+        android:id="@+id/login_fragment"
+        android:name="com.example.plantsbabysitter.ui.login.LoginFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="-16dp"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_login" />
 
     <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment"
+        android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

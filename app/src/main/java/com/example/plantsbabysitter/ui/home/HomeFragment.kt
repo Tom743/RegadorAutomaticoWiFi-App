@@ -1,4 +1,4 @@
-package com.example.plantsbabysitter.presentation.view
+package com.example.plantsbabysitter.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,20 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.plantsbabysitter.R
-import com.example.plantsbabysitter.presentation.viewmodel.HomeViewModel
-import com.example.plantsbabysitter.presentation.viewmodel.MainViewModelFactory
-import com.example.plantsbabysitter.util.DataResources
+import com.example.plantsbabysitter.data.DataResources
+import com.example.plantsbabysitter.ui.MainViewModelFactory
 
 
 class HomeFragment : Fragment() {
 
     private val viewModel by lazy {
-        ViewModelProvider(this,
+        ViewModelProvider(
+            this,
             MainViewModelFactory()
         ).get(HomeViewModel::class.java)
     }
@@ -37,18 +37,22 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         text = view.findViewById(R.id.plant_state_text)
-        view.findViewById<Button>(R.id.continue_button).setOnClickListener {
-            findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
+        view.findViewById<Button>(R.id.go_to_login_button).setOnClickListener {
+            findNavController().navigate(R.id.action_HomeFragment_to_login)
         }
+        view.findViewById<Button>(R.id.request_state_button).setOnClickListener {
+            viewModel.requestPlantData()
+        }
+
         observeDataAndUpdateUI()
     }
 
     private fun observeDataAndUpdateUI() {
         val data = viewModel.getPruebaLiveData()
-        data.observe(viewLifecycleOwner, Observer {
-            when(it) {
+        data.observe(viewLifecycleOwner, { result ->
+            when (result) {
                 is DataResources.Success -> {
-                    text.text = it.data.value.toString()
+                    text.text = result.data.value.toString()
                 }
                 is DataResources.Failure -> {
                     text.text = "error"

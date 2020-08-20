@@ -1,4 +1,4 @@
-package com.example.plantsbabysitter.presentation.view
+package com.example.plantsbabysitter.ui
 
 import android.os.Bundle
 import com.example.plantsbabysitter.R

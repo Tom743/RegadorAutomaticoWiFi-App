@@ -2,7 +2,7 @@ package com.example.plantsbabysitter.domain.repo
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import com.example.plantsbabysitter.util.DataResources
+import com.example.plantsbabysitter.data.DataResources
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.database.*
 

@@ -1,4 +1,4 @@
-package com.example.plantsbabysitter.presentation.viewmodel
+package com.example.plantsbabysitter.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
