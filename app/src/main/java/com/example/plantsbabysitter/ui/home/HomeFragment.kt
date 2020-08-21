@@ -40,7 +40,7 @@ class HomeFragment : Fragment() {
             findNavController().navigate(R.id.action_HomeFragment_to_login)
         }
         view.findViewById<Button>(R.id.request_state_button).setOnClickListener {
-            viewModel.requestPlantData()
+            context?.let { context -> viewModel.requestPlantData(context) }
         }
 
         observeDataAndUpdateUI()

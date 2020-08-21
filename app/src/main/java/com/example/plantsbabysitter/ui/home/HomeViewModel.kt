@@ -1,6 +1,8 @@
 package com.example.plantsbabysitter.ui.home
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
+import com.example.plantsbabysitter.R
 import com.example.plantsbabysitter.domain.repo.FirebaseQueryLiveData
 import com.example.plantsbabysitter.domain.repo.FirebaseWriteData
 import com.google.firebase.database.FirebaseDatabase
@@ -13,18 +15,17 @@ class HomeViewModel: ViewModel() {
         return FirebaseQueryLiveData(ref)
     }
 
-    // TODO 20/AUG/2020 Move strings to resource file
     fun getPruebaLiveData(): FirebaseQueryLiveData {
         return getLiveData("prueba")
     }
 
-    fun requestPlantData() {
+    fun requestPlantData(context: Context) {
         // Asks robot to update the data in the database
-        FirebaseWriteData.setValue("request fresh data", true)
+        FirebaseWriteData.setValue(context.getString(R.string.refresh_data_now_path), true)
     }
 
-    fun waterPlant() {
+    fun waterPlant(context: Context) {
         // Asks robot to water the plantita1
-        FirebaseWriteData.setValue("/plants/plantita1/water now", true)
+        FirebaseWriteData.setValue(context.getString(R.string.water_now_path), true)
     }
 }

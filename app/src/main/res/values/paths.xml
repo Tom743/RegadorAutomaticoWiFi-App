@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Database paths -->
+    <string name="water_now_path">/plants/plantita1/water now</string>
+    <string name="refresh_data_now_path">/request fresh data</string>
+</resources>
