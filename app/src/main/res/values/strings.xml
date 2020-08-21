@@ -7,12 +7,13 @@
     <string name="login_fragment_label">Login Fragment</string>
     <string name="next" tools:keep="@string/next">Next</string>
     <!-- Strings related to login -->
-    <string name="login_button">login</string>
     <string name="firebase_login">Inicia sesión en firebase</string>
     <string name="sign_in_with_google">Iniciar sesión con google</string>
     <string name="logout">Cerrar sesión</string>
     <string name="user_info_title">Info:</string>
     <string name="firebase_logo_description">Logo de firebase</string>
 
-    <string name="get_state_button">state?</string>
+    <string name="get_state_button">actualizar datos</string>
+    <string name="account">Cuenta</string>
+    <string name="water_now">regar ahora</string>
 </resources>

@@ -15,8 +15,8 @@ class HomeViewModel: ViewModel() {
         return FirebaseQueryLiveData(ref)
     }
 
-    fun getPruebaLiveData(): FirebaseQueryLiveData {
-        return getLiveData("prueba")
+    fun getPlantLiveData(context: Context): FirebaseQueryLiveData {
+        return getLiveData(context.resources.getString(R.string.plant1_data))
     }
 
     fun requestPlantData(context: Context) {

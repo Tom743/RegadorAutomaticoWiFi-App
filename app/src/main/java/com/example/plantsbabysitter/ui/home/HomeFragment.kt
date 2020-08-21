@@ -5,13 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.plantsbabysitter.R
 import com.example.plantsbabysitter.data.DataResources
 import com.example.plantsbabysitter.ui.MainViewModelFactory
+import com.github.mikephil.charting.charts.LineChart
 
 
 class HomeFragment : Fragment() {
@@ -22,7 +23,8 @@ class HomeFragment : Fragment() {
             MainViewModelFactory()
         ).get(HomeViewModel::class.java)
     }
-    private lateinit var text: TextView
+
+    private lateinit var chart: LineChart
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,26 +37,31 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        text = view.findViewById(R.id.plant_state_text)
+        chart = view.findViewById(R.id.chart)
+
         view.findViewById<Button>(R.id.go_to_login_button).setOnClickListener {
             findNavController().navigate(R.id.action_HomeFragment_to_login)
+        }
+        view.findViewById<Button>(R.id.water_now_button).setOnClickListener {
+            context?.let { context -> viewModel.waterPlant(context) }
         }
         view.findViewById<Button>(R.id.request_state_button).setOnClickListener {
             context?.let { context -> viewModel.requestPlantData(context) }
         }
 
-        observeDataAndUpdateUI()
+        observeData()
     }
 
-    private fun observeDataAndUpdateUI() {
-        val data = viewModel.getPruebaLiveData()
-        data.observe(viewLifecycleOwner, { result ->
+    private fun observeData() {
+        context?.let { viewModel.getPlantLiveData(it) }?.observe(viewLifecycleOwner, { result ->
             when (result) {
+                // TODO: 21/AUG/2020 Do something with data
                 is DataResources.Success -> {
-                    text.text = result.data.value.toString()
+                    print(result.data)
+                    Toast.makeText(context, "Some data received", Toast.LENGTH_SHORT).show()
                 }
                 is DataResources.Failure -> {
-                    text.text = "error"
+                    Toast.makeText(context, "Error fetching data", Toast.LENGTH_SHORT).show()
                 }
             }
         })
