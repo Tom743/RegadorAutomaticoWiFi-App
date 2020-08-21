@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.Fragment
 import com.example.plantsbabysitter.R
+import com.example.plantsbabysitter.ui.ViewAnimator
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -123,11 +124,12 @@ class GoogleSignInFragment : Fragment() {
         textView.append("\n$name")
         textView.append("\n$email")
 
-        /*
-        firebaseImageView.visibility = View.INVISIBLE
-        profilePicImageView.visibility = View.VISIBLE
-        Picasso.get().load(photo).into(profilePicImageView)*/
-        Picasso.get().load(photo).into(firebaseImageView)
+        // FIXME: 20/AUG/2020 There is some weird flicker when starting the layout with profile pic on
+        Picasso.get().load(photo)
+            .placeholder(R.drawable.profile_image_placeholder).error(R.drawable.ic_google_logo)
+            .into(profilePicImageView)
+        ViewAnimator.viewInvisibleAnimator(firebaseImageView)
+        ViewAnimator.viewVisibleAnimator(profilePicImageView)
 
         buttonLogout.visibility = View.VISIBLE
         buttonLogin.visibility = View.INVISIBLE
@@ -136,9 +138,10 @@ class GoogleSignInFragment : Fragment() {
 
     private fun updateUINoUser() {
         textView.text = resources.getString(R.string.firebase_login)
-        /*firebaseImageView.visibility = View.VISIBLE
-        profilePicImageView.visibility = View.INVISIBLE*/
-        Picasso.get().load(R.drawable.ic_firebase_logo).into(firebaseImageView)
+
+        ViewAnimator.viewInvisibleAnimator(profilePicImageView)
+        ViewAnimator.viewVisibleAnimator(firebaseImageView)
+
         buttonLogout.visibility = View.INVISIBLE
         buttonLogin.visibility = View.VISIBLE
     }
