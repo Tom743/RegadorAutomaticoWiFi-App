@@ -16,7 +16,7 @@
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/chart"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:layout_marginTop="26dp"/>
 
     <Button
@@ -32,6 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_above="@+id/go_to_login_button"
+        android:id="@+id/linearLayoutButtons"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="26dp"
         android:layout_marginRight="26dp">

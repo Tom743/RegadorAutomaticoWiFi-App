@@ -13,6 +13,13 @@ import com.example.plantsbabysitter.R
 import com.example.plantsbabysitter.data.DataResources
 import com.example.plantsbabysitter.ui.MainViewModelFactory
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.YAxis
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
+import kotlin.math.cos
+import kotlin.math.sin
 
 
 class HomeFragment : Fragment() {
@@ -37,8 +44,6 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        chart = view.findViewById(R.id.chart)
-
         view.findViewById<Button>(R.id.go_to_login_button).setOnClickListener {
             findNavController().navigate(R.id.action_HomeFragment_to_login)
         }
@@ -48,6 +53,39 @@ class HomeFragment : Fragment() {
         view.findViewById<Button>(R.id.request_state_button).setOnClickListener {
             context?.let { context -> viewModel.requestPlantData(context) }
         }
+
+        // Example chart
+        chart = view.findViewById(R.id.chart)
+        val values1: MutableList<Entry> = ArrayList()
+        for (x in 1..10) {
+            var num = (sin(x.toDouble()).toFloat()*100)
+            if (num < 0) {
+                num *=-1
+            }
+            values1.add(Entry(x.toFloat(), num))
+        }
+        val values2: MutableList<Entry> = ArrayList()
+        for (x in 1..10) {
+            var num = (cos(x.toDouble()).toFloat()*100)
+            if (num < 0) {
+                num *=-1
+            }
+            values2.add(Entry(x.toFloat(), num))
+        }
+
+        val setValues1 = LineDataSet(values1, "sin of x")
+        setValues1.axisDependency = (YAxis.AxisDependency.LEFT)
+        val setValues2 = LineDataSet(values2, "cos of x")
+        setValues2.axisDependency = (YAxis.AxisDependency.LEFT)
+        setValues2.color = R.color.colorPrimary
+
+        val dataSets: MutableList<ILineDataSet> = ArrayList()
+        dataSets.add(setValues1)
+        dataSets.add(setValues2)
+
+        val data = LineData(dataSets)
+        chart.data = data
+        chart.invalidate() // refresh
 
         observeData()
     }
