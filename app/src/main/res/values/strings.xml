@@ -19,4 +19,6 @@
     <string name="light">Luz</string>
     <string name="temperature">Temperatura</string>
     <string name="data_updated">Datos actualizados</string>
+    <string name="no_data_message">No hay datos que mostrar</string>
+    <string name="chart_label">Telemetría</string>
 </resources>

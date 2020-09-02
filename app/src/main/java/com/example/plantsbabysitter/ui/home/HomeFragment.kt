@@ -1,6 +1,7 @@
 package com.example.plantsbabysitter.ui.home
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,7 @@ import com.example.plantsbabysitter.R
 import com.example.plantsbabysitter.data.DataResources
 import com.example.plantsbabysitter.ui.MainViewModelFactory
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
@@ -62,9 +64,13 @@ class HomeFragment : Fragment() {
             context?.let { context -> viewModel.requestPlantData(context) }
         }
 
-        // Example chart
         chart = view.findViewById(R.id.chart)
         chart.setDrawGridBackground(false)
+        chart.setNoDataText(getString(R.string.no_data_message))
+        chart.setNoDataTextColor(Color.BLACK)
+        val description = Description()
+        description.text = getString(R.string.chart_label)
+        chart.description = description
         val xAxis = chart.xAxis
         xAxis.setValueFormatter { value, _ ->
             val dateFormat = getTimeInstance(SHORT)
@@ -93,13 +99,21 @@ class HomeFragment : Fragment() {
 
         val humidityValuesSet = LineDataSet(humidityValues, getString(R.string.humidity))
         humidityValuesSet.axisDependency = YAxis.AxisDependency.LEFT
-        humidityValuesSet.setColors(R.color.chartHumidity)
+        humidityValuesSet.setColors(Color.BLUE)
+        humidityValuesSet.setCircleColor(Color.BLUE)
+        humidityValuesSet.setDrawCircleHole(false)
+
         val temperatureValuesSet = LineDataSet(temperatureValues, getString(R.string.temperature))
         temperatureValuesSet.axisDependency = YAxis.AxisDependency.LEFT
-        temperatureValuesSet.setColors(R.color.chartTemperature)
+        temperatureValuesSet.setColors(Color.RED)
+        temperatureValuesSet.setCircleColor(Color.RED)
+        temperatureValuesSet.setDrawCircleHole(false)
+
         val lightValuesSet = LineDataSet(lightValues, getString(R.string.light))
         lightValuesSet.axisDependency = YAxis.AxisDependency.LEFT
-        lightValuesSet.setColors(R.color.chartLight)
+        lightValuesSet.setColors(Color.GREEN)
+        lightValuesSet.setCircleColor(Color.GREEN)
+        lightValuesSet.setDrawCircleHole(false)
 
         val dataSets: MutableList<ILineDataSet> = ArrayList()
         dataSets.add(humidityValuesSet)
