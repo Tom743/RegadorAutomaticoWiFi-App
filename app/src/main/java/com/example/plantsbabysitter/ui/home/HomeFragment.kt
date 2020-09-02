@@ -1,5 +1,6 @@
 package com.example.plantsbabysitter.ui.home
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,13 +14,17 @@ import com.example.plantsbabysitter.R
 import com.example.plantsbabysitter.data.DataResources
 import com.example.plantsbabysitter.ui.MainViewModelFactory
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
-import kotlin.math.cos
-import kotlin.math.sin
+import com.google.firebase.database.DataSnapshot
+import java.text.DateFormat.SHORT
+import java.text.DateFormat.getTimeInstance
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class HomeFragment : Fragment() {
@@ -32,6 +37,9 @@ class HomeFragment : Fragment() {
     }
 
     private lateinit var chart: LineChart
+    private val humidityValues: MutableList<Entry> = ArrayList()
+    private val temperatureValues: MutableList<Entry> = ArrayList()
+    private val lightValues: MutableList<Entry> = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,47 +64,61 @@ class HomeFragment : Fragment() {
 
         // Example chart
         chart = view.findViewById(R.id.chart)
-        val values1: MutableList<Entry> = ArrayList()
-        for (x in 1..10) {
-            var num = (sin(x.toDouble()).toFloat()*100)
-            if (num < 0) {
-                num *=-1
-            }
-            values1.add(Entry(x.toFloat(), num))
+        chart.setDrawGridBackground(false)
+        val xAxis = chart.xAxis
+        xAxis.setValueFormatter { value, _ ->
+            val dateFormat = getTimeInstance(SHORT)
+            dateFormat.format(Date(value.toLong()*1000))
         }
-        val values2: MutableList<Entry> = ArrayList()
-        for (x in 1..10) {
-            var num = (cos(x.toDouble()).toFloat()*100)
-            if (num < 0) {
-                num *=-1
-            }
-            values2.add(Entry(x.toFloat(), num))
-        }
-
-        val setValues1 = LineDataSet(values1, "sin of x")
-        setValues1.axisDependency = (YAxis.AxisDependency.LEFT)
-        val setValues2 = LineDataSet(values2, "cos of x")
-        setValues2.axisDependency = (YAxis.AxisDependency.LEFT)
-        setValues2.color = R.color.colorPrimary
-
-        val dataSets: MutableList<ILineDataSet> = ArrayList()
-        dataSets.add(setValues1)
-        dataSets.add(setValues2)
-
-        val data = LineData(dataSets)
-        chart.data = data
-        chart.invalidate() // refresh
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+        xAxis.labelRotationAngle = 90f
 
         observeData()
+    }
+
+    @SuppressLint("RestrictedApi")  // TODO 29/AUG/2020 Try to avoid this
+    private fun refreshChartData(data: DataSnapshot) {
+        for (telemetry in data.children) {
+            if (telemetry.ref.path.toString() != getString(R.string.water_now_path)) {
+                val time = telemetry.child("time").value.toString().toFloat()
+                humidityValues.add(
+                    Entry(time, telemetry.child("humidity").value.toString().toFloat())
+                )
+                temperatureValues.add(
+                    Entry(time, telemetry.child("temperature").value.toString().toFloat())
+                )
+                lightValues.add(Entry(time, telemetry.child("light").value.toString().toFloat()))
+            }
+        }
+
+        val humidityValuesSet = LineDataSet(humidityValues, getString(R.string.humidity))
+        humidityValuesSet.axisDependency = YAxis.AxisDependency.LEFT
+        humidityValuesSet.setColors(R.color.chartHumidity)
+        val temperatureValuesSet = LineDataSet(temperatureValues, getString(R.string.temperature))
+        temperatureValuesSet.axisDependency = YAxis.AxisDependency.LEFT
+        temperatureValuesSet.setColors(R.color.chartTemperature)
+        val lightValuesSet = LineDataSet(lightValues, getString(R.string.light))
+        lightValuesSet.axisDependency = YAxis.AxisDependency.LEFT
+        lightValuesSet.setColors(R.color.chartLight)
+
+        val dataSets: MutableList<ILineDataSet> = ArrayList()
+        dataSets.add(humidityValuesSet)
+        dataSets.add(temperatureValuesSet)
+        dataSets.add(lightValuesSet)
+
+        chart.data = LineData(dataSets)
+        chart.invalidate()
+
+        Toast.makeText(context, getString(R.string.data_updated), Toast.LENGTH_SHORT).show()
     }
 
     private fun observeData() {
         context?.let { viewModel.getPlantLiveData(it) }?.observe(viewLifecycleOwner, { result ->
             when (result) {
-                // TODO: 21/AUG/2020 Do something with data
                 is DataResources.Success -> {
-                    print(result.data)
-                    Toast.makeText(context, "Some data received", Toast.LENGTH_SHORT).show()
+                    //if (result.data is real data) { // TODO
+                    refreshChartData(result.data)
+                    //}
                 }
                 is DataResources.Failure -> {
                     Toast.makeText(context, "Error fetching data", Toast.LENGTH_SHORT).show()

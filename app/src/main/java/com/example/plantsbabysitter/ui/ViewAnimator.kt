@@ -7,8 +7,7 @@ import android.view.View
 object ViewAnimator {
     fun viewInvisibleAnimator(view: View) {
         view.animate()
-            .alpha(0.0f)
-            .setDuration(500)/*
+            .alpha(0.0f).duration = 500/*
             .setListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator?) {
                     view.visibility = View.INVISIBLE

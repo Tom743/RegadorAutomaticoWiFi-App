@@ -7,4 +7,7 @@
     <color name="colorPrimary">#A84606</color>
     <color name="colorPrimaryDark">#5E2804</color>
     <color name="colorAccent">#DAB603</color>
+    <color name="chartHumidity">#005CCC</color>
+    <color name="chartLight">#C3A513</color>
+    <color name="chartTemperature">#C14503</color>
 </resources>

@@ -16,8 +16,11 @@
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/chart"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginTop="26dp"/>
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayoutButtons"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp" />
 
     <Button
         android:id="@+id/go_to_login_button"

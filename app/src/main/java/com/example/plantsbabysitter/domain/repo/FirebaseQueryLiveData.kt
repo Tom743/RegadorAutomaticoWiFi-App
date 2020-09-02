@@ -7,18 +7,10 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.database.*
 
 
-class FirebaseQueryLiveData : LiveData<DataResources<DataSnapshot>> {
-    private val query: Query
+class FirebaseQueryLiveData(ref: DatabaseReference) : LiveData<DataResources<DataSnapshot>>() {
+    private val query: Query = ref
     private val listener =
         MyValueEventListener()
-
-    constructor(query: Query) {
-        this.query = query
-    }
-
-    constructor(ref: DatabaseReference) {
-        query = ref
-    }
 
     override fun onActive() {
         Log.d(LOG_TAG, "onActive")

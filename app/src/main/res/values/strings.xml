@@ -1,6 +1,5 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">PlantsBabysitter</string>
-    <string name="plant_state">I\'ll show u here how your plant is</string>
     <string name="title_activity_main" tools:keep="@string/title_activity_main">MainActivity</string>
     <!-- Strings used for fragments for navigation -->
     <string name="home_fragment_label">Home Fragment</string>
@@ -16,4 +15,8 @@
     <string name="get_state_button">actualizar datos</string>
     <string name="account">Cuenta</string>
     <string name="water_now">regar ahora</string>
+    <string name="humidity">Humedad</string>
+    <string name="light">Luz</string>
+    <string name="temperature">Temperatura</string>
+    <string name="data_updated">Datos actualizados</string>
 </resources>
