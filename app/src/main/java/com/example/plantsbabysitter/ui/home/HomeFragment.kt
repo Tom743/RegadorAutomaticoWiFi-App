@@ -39,9 +39,6 @@ class HomeFragment : Fragment() {
     }
 
     private lateinit var chart: LineChart
-    private val humidityValues: MutableList<Entry> = ArrayList()
-    private val temperatureValues: MutableList<Entry> = ArrayList()
-    private val lightValues: MutableList<Entry> = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -84,6 +81,10 @@ class HomeFragment : Fragment() {
 
     @SuppressLint("RestrictedApi")  // TODO 29/AUG/2020 Try to avoid this
     private fun refreshChartData(data: DataSnapshot) {
+        val humidityValues: MutableList<Entry> = ArrayList()
+        val temperatureValues: MutableList<Entry> = ArrayList()
+        val lightValues: MutableList<Entry> = ArrayList()
+
         for (telemetry in data.children) {
             if (telemetry.ref.path.toString() != getString(R.string.water_now_path)) {
                 val time = telemetry.child("time").value.toString().toFloat()
